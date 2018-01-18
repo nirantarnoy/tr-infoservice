@@ -16,7 +16,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => [$uri]];
 <!-- -------------- Column Left -------------- -->
            <!-- -------------- Column Left -------------- -->
             <aside class="chute chute-left chute290" data-chute-height="match">
-				<?php $form = ActiveForm::begin(['id'=>'contentList','options' => ['method'=>'post']]);?>
+				<form id="myform" method="get" action="<?=Url::to(['user/list'],true)?>">
                 <!-- -------------- Menu Block -------------- -->
                 <div class="allcp-form theme-primary">
 
@@ -26,7 +26,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => [$uri]];
 
                     <div class="section mb20">
                         <label for="customer-id" class="field prepend-icon">
-                            <?= Html::textInput('q',$search['q'],['class'=>'gui-input','placeholder'=>'name, username'])?>
+                            <?= Html::textInput('uname',$uname,['class'=>'gui-input','placeholder'=>'name, username'])?>
                             <label for="customer-id" class="field-icon">
                                 <i class="fa fa-user"></i>
                             </label>
@@ -35,18 +35,17 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => [$uri]];
                     <h6 class="mb15"> by status</h6>
                     <div class="section mb20">
                         <label for="customer-name" class="field prepend-icon">
-                            <?= Html::dropDownList('status',$search['status'],[''=>'ทุกสถานะ']+Workflow::$arrStatusTh,['class'=>'gui-input']);?>
+                            <?= Html::dropDownList('status',$status,[''=>'ทุกสถานะ']+Workflow::$arrStatusTh,['class'=>'gui-input']);?>
                         </label>
                     </div>
                     <hr class="short">
 
                     <div class="section">
-                        <button class="btn btn-primary pull-right ph30" type="button">Search</button>
+                        <input type="submit" class="btn btn-primary pull-right ph30" value="Search">
                     </div>
 
                 </div>
-			<?= Html::hiddenInput('op','');?>
- 			<?php ActiveForm::end(); ?>
+			</form>
             </aside>
             <!-- -------------- /Column Left -------------- -->
 

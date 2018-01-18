@@ -40,53 +40,69 @@ class UserController extends Controller
 		];
 	}
 	public function actionList(){	 
-		if (Yii::$app->request->isPost) {
+		// if (Yii::$app->request->isPost) {
 
-    		$op = Yii::$app->request->post('op');
-    		$selectContent =  Yii::$app->request->post('selectContent');
-    		if($op == 'delete'){
-    			$r = $this->doDelete($selectContent);
-    			if($r){
-    				$this->reassign();
-    				Yii::$app->session->setFlash('message.level', 'success');
-    				Yii::$app->session->setFlash('message.content', 'ลบสำเร็จ '.$r.' รายกาย');
-    			}else{
-    				Yii::$app->session->setFlash('message.level', 'warning');
-    				Yii::$app->session->setFlash('message.content', 'ลบไม่สำเร็จ');
-    			}
-    		}else if($op == 'search'){
-    			$q =  Yii::$app->request->post('q');
-    			$status =  Yii::$app->request->post('status');
+  //   		$op = Yii::$app->request->post('op');
+  //   		$selectContent =  Yii::$app->request->post('selectContent');
+  //   		if($op == 'delete'){
+  //   			$r = $this->doDelete($selectContent);
+  //   			if($r){
+  //   				$this->reassign();
+  //   				Yii::$app->session->setFlash('message.level', 'success');
+  //   				Yii::$app->session->setFlash('message.content', 'ลบสำเร็จ '.$r.' รายกาย');
+  //   			}else{
+  //   				Yii::$app->session->setFlash('message.level', 'warning');
+  //   				Yii::$app->session->setFlash('message.content', 'ลบไม่สำเร็จ');
+  //   			}
+  //   		}else if($op == 'search'){
+  //   			$q =  Yii::$app->request->post('q');
+  //   			$status =  Yii::$app->request->post('status');
     			
-    			$query = User::find();
-    			if($q!=null){
-    				$query->andWhere(['like','username',$q]); 
-    				$query->orWhere(['like','firstName',$q]); 
-    				$query->orWhere(['like','lastName',$q]); 
-    				$query->orWhere(['like','nickName',$q]); 
-    				$query->orWhere(['like','role',$q]); 
-    			}
-    			if($status!=null){
-    				$query->andWhere(['status'=>$status]);    	
-    			}
-    			
-    			
-    			\Yii::$app->session['user/list.query'] = $query;
-    			\Yii::$app->session['user/list.query.q'] = $q;
-    			\Yii::$app->session['user/list.query.status'] = $status;
+  //   			$query = User::find();
+  //   			if($q!=null){
+  //   				$query->andWhere(['like','username',$q]); 
+  //   				$query->orWhere(['like','firstName',$q]); 
+  //   				$query->orWhere(['like','lastName',$q]); 
+  //   				$query->orWhere(['like','nickName',$q]); 
+  //   				$query->orWhere(['like','role',$q]); 
+  //   			}
+  //   			if($status!=null){
+  //   				$query->andWhere(['status'=>$status]);    	
+  //   			}
     			
     			
-    		}else if($op == 'resetSearch'){
-    			$query = User::find();
-    			\Yii::$app->session['user/list.query'] = $query;
-    			\Yii::$app->session['user/list.query.q'] = '';
-    			\Yii::$app->session['user/list.query.status'] = '';
-    		}
-    	}    	
-    	$query = isset(\Yii::$app->session['user/list.query'])?\Yii::$app->session['user/list.query']:User::find();
-    	$search['q'] = isset(\Yii::$app->session['user/list.query.q'])?\Yii::$app->session['user/list.query.q']:'';
-    	$search['status'] = isset(\Yii::$app->session['user/list.query.status'])?\Yii::$app->session['user/list.query.status']:'';
-    	   	
+  //   			\Yii::$app->session['user/list.query'] = $query;
+  //   			\Yii::$app->session['user/list.query.q'] = $q;
+  //   			\Yii::$app->session['user/list.query.status'] = $status;
+    			
+    			
+  //   		}else if($op == 'resetSearch'){
+  //   			$query = User::find();
+  //   			\Yii::$app->session['user/list.query'] = $query;
+  //   			\Yii::$app->session['user/list.query.q'] = '';
+  //   			\Yii::$app->session['user/list.query.status'] = '';
+  //   		}
+  //   	}    	
+
+        $uname = '';
+        $status = 0;
+
+        if(Yii::$app->request->isGet){
+            $uname = Yii::$app->request->get('uname');
+            $status = Yii::$app->request->get('status');
+        }
+
+    	// $query = isset(\Yii::$app->session['user/list.query'])?\Yii::$app->session['user/list.query']:User::find();
+    	// $search['q'] = isset(\Yii::$app->session['user/list.query.q'])?\Yii::$app->session['user/list.query.q']:'';
+    	// $search['status'] = isset(\Yii::$app->session['user/list.query.status'])?\Yii::$app->session['user/list.query.status']:'';
+
+        $query = User::find();
+
+        if($uname != ''){
+            $query->where(['or',['like','firstName',$uname],['like','lastName',$uname],['like','username',$uname]])->andFilterWhere(['like','status',$status]);
+        }
+    	
+
     	$query->orderBy('createTime');
     	$count = $query->count();
     
@@ -103,9 +119,11 @@ class UserController extends Controller
 		
 		return $this->render('list',[
 				'pages'=>$pages,
-				'search'=>$search,
-				'contentList'=>$contentList,
+			     'uname'=>$uname,
+                'status'=>$status,
+            	'contentList'=>$contentList,
 		]);
+       // }
 	}
 	public function doDelete($arrId){
 
