@@ -98,9 +98,9 @@ class UserController extends Controller
 
         $query = User::find();
 
-        if($uname != ''){
+        //if($uname != ''){
             $query->where(['or',['like','firstName',$uname],['like','lastName',$uname],['like','username',$uname]])->andFilterWhere(['like','status',$status]);
-        }
+        //}
     	
 
     	$query->orderBy('createTime');
