@@ -22,7 +22,7 @@ $str = <<<EOT
 	$('#fileAmount').change(function(){
 		var type = $("select#multiselect11 option:selected").val();
 		var rate = 0;
-		alert(type);
+		//alert(type);
 		if(type ==1){
 			rate = 50;
 		}else{
@@ -81,11 +81,18 @@ $str = <<<EOT
 	});
 
    function cal(){
-   	  var sum1 = parseFloat($('#fileServiceCharge').val());
-   	  var sum2 = parseFloat($('#copyCharge').val());
-   	  var sum3 = parseFloat($('#pic46price').val());
-   	  var sum4 = parseFloat($('#pic57price').val());
-   	  var sum5 = parseFloat($('#pic68price').val());
+   	  var sum1 = parseFloat($('#fileServiceCharge').val()) || 0;
+   	  var sum2 = parseFloat($('#copyCharge').val()) || 0;
+   	  var sum3 = parseFloat($('#pic46price').val()) || 0;
+   	  var sum4 = parseFloat($('#pic57price').val()) || 0;
+   	  var sum5 = parseFloat($('#pic68price').val()) || 0;
+
+       if(sum1 == ""){sum1=0;}
+	   if(sum2 == ""){sum2=0;}
+	   if(sum3 == ""){sum3=0;}
+	   if(sum4 == ""){sum4=0;}
+	   if(sum5 == ""){sum5=0;}
+
    	  $('#total').val(sum1 + sum2 + sum3 +sum4 + sum5);
    }
 EOT;

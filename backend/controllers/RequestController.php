@@ -5,6 +5,7 @@ use Yii;
 use yii\web\Controller;
 use common\models\Requests;
 use kartik\dialog\Dialog;
+use yii\db\Expression;
 
 class RequestController extends Controller
 {
@@ -55,7 +56,7 @@ class RequestController extends Controller
     {
         $sdate = '';
         $ndate = '';
-        $searctext = '%%';
+        $searctext = '';
 
         if(Yii::$app->request->isGet){
            $sdate = Yii::$app->request->get('from_date');
@@ -75,8 +76,9 @@ class RequestController extends Controller
  		$arrTime = [];
  		
  		
- 		if ($sdate !='' && $ndate !='' && $searctext !=''){
- 			$query->where(['between','createTime', $sdate, $ndate ])
+ 		if ($sdate !='' && $ndate !=''){
+          // echo date('d-m-Y H:i:s',strtotime($sdate));return;
+ 			$query->where(['between',new Expression('date(createTime)'), date('Y-m-d',strtotime($sdate)),date('Y-m-d',strtotime($ndate))])
                   ->andFilterWhere(['like','firstname',$searctext]);
  			
  		}elseif ($sdate =='' && $ndate =='' && $searctext !=''){
