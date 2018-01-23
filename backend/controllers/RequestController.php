@@ -79,10 +79,10 @@ class RequestController extends Controller
  		if ($sdate !='' && $ndate !=''){
           // echo date('d-m-Y H:i:s',strtotime($sdate));return;
  			$query->where(['between',new Expression('date(createTime)'), date('Y-m-d',strtotime($sdate)),date('Y-m-d',strtotime($ndate))])
-                  ->andFilterWhere(['like','firstname',$searctext]);
+                  ->andFilterWhere(['or',['like','firstname',$searctext],['like','tel',$searctext]]);
  			
  		}elseif ($sdate =='' && $ndate =='' && $searctext !=''){
-            $query->where(['like','firstname',$searctext]);
+            $query->where(['or',['like','firstname',$searctext],['like','tel',$searctext]]);
         }
 
     
